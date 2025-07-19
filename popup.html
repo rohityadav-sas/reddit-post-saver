@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Save & View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 400px;
+            height: 600px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            color: #c9d1d9;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1f6feb, #0969da);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .content {
+            height: calc(100% - 80px);
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .tab-container {
+            display: flex;
+            background: #21262d;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            background: #21262d;
+            border: none;
+            color: #8b949e;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            background: #30363d;
+            color: #c9d1d9;
+        }
+
+        .tab.active {
+            background: #0d1117;
+            color: #58a6ff;
+            border-bottom: 2px solid #58a6ff;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            height: calc(100% - 48px);
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .save-section {
+            text-align: center;
+        }
+
+        .current-post {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-title {
+            font-size: 1rem;
+            color: #f0f6fc;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .post-meta {
+            color: #8b949e;
+            font-size: 0.8rem;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
+        }
+
+        .save-btn:disabled {
+            background: #30363d;
+            color: #8b949e;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .saved-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .saved-post {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .saved-post:hover {
+            border-color: #58a6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .saved-post-title {
+            font-size: 0.9rem;
+            color: #f0f6fc;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .saved-post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8b949e;
+            font-size: 0.8rem;
+        }
+
+        .comment-count {
+            background: #0969da;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        .delete-btn {
+            background: #da3633;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+
+        .delete-btn:hover {
+            background: #f85149;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8b949e;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #8b949e;
+        }
+
+        .spinner {
+            border: 2px solid #21262d;
+            border-top: 2px solid #58a6ff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .status-success {
+            background: rgba(35, 134, 54, 0.2);
+            color: #2ea043;
+            border: 1px solid #2ea043;
+        }
+
+        .status-error {
+            background: rgba(248, 81, 73, 0.2);
+            color: #f85149;
+            border: 1px solid #f85149;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-track {
+            background: #21262d;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 3px;
+        }
+
+        .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🎯 Reddit Save</h1>
+        <p>Save posts for offline reading</p>
+    </div>
+
+    <div class="content scrollbar-custom">
+        <div class="tab-container">
+            <button class="tab active" data-tab="save">💾 Save</button>
+            <button class="tab" data-tab="saved">📚 Saved</button>
+        </div>
+
+        <div id="save-tab" class="tab-content active">
+            <div id="status-message"></div>
+
+            <div class="save-section">
+                <div id="current-post" class="current-post" style="display: none;">
+                    <div class="post-title" id="post-title"></div>
+                    <div class="post-meta" id="post-meta"></div>
+                </div>
+
+                <button id="save-btn" class="save-btn" disabled>
+                    <span id="btn-text">🔍 Detecting Reddit Post...</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="saved-tab" class="tab-content">
+            <div id="saved-posts-container" class="saved-posts">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading saved posts...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

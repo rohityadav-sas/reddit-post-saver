@@ -1,0 +1,36 @@
+{
+	"manifest_version": 3,
+	"name": "Reddit Save & View",
+	"version": "1.0",
+	"description": "Save Reddit posts and comments for offline reading with a beautiful interface",
+	"permissions": ["activeTab", "storage", "contextMenus"],
+	"host_permissions": ["*://*.reddit.com/*"],
+	"action": {
+		"default_popup": "popup.html",
+		"default_title": "Save Reddit Post"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*.reddit.com/r/*/comments/*"],
+			"js": ["content.js"],
+			"run_at": "document_idle"
+		}
+	],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"icons": {
+		"16": "icons/icon16.png",
+		"32": "icons/icon32.png",
+		"48": "icons/icon48.png",
+		"64": "icons/icon64.png",
+		"96": "icons/icon96.png",
+		"128": "icons/icon128.png"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["viewer.html", "viewer.js"],
+			"matches": ["<all_urls>"]
+		}
+	]
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Background circle with Reddit orange -->
+  <circle cx="64" cy="64" r="58" fill="#FF4500" stroke="#FF5722" stroke-width="2"/>
+  
+  <!-- Inner circle for depth -->
+  <circle cx="64" cy="64" r="50" fill="#FF5722"/>
+  
+  <!-- Bookmark/Save icon -->
+  <path d="M45 35 L83 35 C85.2 35 87 36.8 87 39 L87 93 C87 94.7 85.7 96 84 96 C83.2 96 82.5 95.7 82 95.1 L64 77 L46 95.1 C45.5 95.7 44.8 96 44 96 C42.3 96 41 94.7 41 93 L41 39 C41 36.8 42.8 35 45 35 Z" fill="white"/>
+  
+  <!-- Reddit antenna/save symbol -->
+  <circle cx="56" cy="50" r="3" fill="#FF4500"/>
+  <circle cx="72" cy="50" r="3" fill="#FF4500"/>
+  
+  <!-- Small Reddit smile -->
+  <path d="M52 65 Q64 72 76 65" stroke="#FF4500" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Save indicator dots -->
+  <circle cx="47" cy="42" r="1.5" fill="#FFD700"/>
+  <circle cx="81" cy="42" r="1.5" fill="#FFD700"/>
+  <circle cx="47" cy="48" r="1.5" fill="#FFD700"/>
+  <circle cx="81" cy="48" r="1.5" fill="#FFD700"/>
+</svg>

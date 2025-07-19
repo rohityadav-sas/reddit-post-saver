@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Post Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0d1117, #161b22);
+            color: #c9d1d9;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #161b22, #21262d);
+            border-radius: 12px;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+        }
+
+        .header h1 {
+            color: #58a6ff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .post-container {
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-header {
+            padding: 20px;
+            border-bottom: 1px solid #30363d;
+            background: linear-gradient(135deg, #1c2128, #21262d);
+        }
+
+        .post-content {
+            padding: 25px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #c9d1d9;
+        }
+
+        .post-content p {
+            margin-bottom: 15px;
+        }
+
+        .post-content strong {
+            color: #ffa657;
+            font-weight: 600;
+        }
+
+        .post-content a {
+            color: #58a6ff;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .post-content a:hover {
+            border-bottom-color: #58a6ff;
+        }
+
+        .post-image {
+            padding: 20px;
+            text-align: center;
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .post-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-link {
+            padding: 20px;
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .post-link a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-block;
+            padding: 10px 15px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .post-link a:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+        }
+
+        .post-title {
+            font-size: 1.8rem;
+            color: #f0f6fc;
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .score {
+            background: #238636;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .subreddit {
+            background: #1f6feb;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .comments-section {
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .comments-header {
+            padding: 20px;
+            border-bottom: 1px solid #30363d;
+            background: linear-gradient(135deg, #1c2128, #21262d);
+        }
+
+        .comments-title {
+            font-size: 1.5rem;
+            color: #f0f6fc;
+            font-weight: 600;
+        }
+
+        .comment {
+            border-bottom: 1px solid #21262d;
+            padding: 20px;
+            transition: background-color 0.2s ease;
+        }
+
+        .comment:hover {
+            background-color: #0d1117;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .comment-author {
+            color: #58a6ff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .comment-score {
+            background: #238636;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .negative {
+            background: #da3633;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .comment-time {
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+
+        .reply-indicator {
+            color: #8b949e;
+            font-size: 0.8rem;
+        }
+
+        .comment-body {
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        .depth-0 .comment-body {
+            margin-left: 0;
+            padding-left: 0;
+            border-left: none;
+        }
+
+        .depth-1 .comment-body {
+            margin-left: 30px;
+            padding-left: 20px;
+            border-left: 2px solid #58a6ff;
+        }
+
+        .depth-2 .comment-body {
+            margin-left: 60px;
+            padding-left: 20px;
+            border-left: 2px solid #f85149;
+        }
+
+        .depth-3 .comment-body {
+            margin-left: 90px;
+            padding-left: 20px;
+            border-left: 2px solid #a5f3fc;
+        }
+
+        .depth-4 .comment-body {
+            margin-left: 120px;
+            padding-left: 20px;
+            border-left: 2px solid #ffa657;
+        }
+
+        .depth-5 .comment-body {
+            margin-left: 150px;
+            padding-left: 20px;
+            border-left: 2px solid #f0f6fc;
+        }
+
+        .comment-body p {
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b949e;
+            font-size: 1.2rem;
+        }
+
+        .spinner {
+            border: 3px solid #21262d;
+            border-top: 3px solid #58a6ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px;
+            color: #f85149;
+            background: rgba(248, 81, 73, 0.1);
+            border: 1px solid #f85149;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Reddit Post Viewer</h1>
+            <p>Offline saved Reddit post</p>
+        </div>
+
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading saved post...
+            </div>
+        </div>
+    </div>
+
+    <script src="viewer.js"></script>
+</body>
+
+</html>
