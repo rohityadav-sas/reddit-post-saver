@@ -1,6 +1,5 @@
 class PostViewer {
 	constructor() {
-		this.setupEventListeners()
 		this.init()
 	}
 
