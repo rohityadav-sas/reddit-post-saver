@@ -29,6 +29,16 @@ class RedditExtractor {
 						sendResponse({ success: false, error: error.message })
 					})
 				return true 
+			} else if (request.action === "savePost") {
+				this.savePostFromContextMenu()
+					.then(() => {
+						sendResponse({ success: true })
+					})
+					.catch((error) => {
+						console.error("Error saving post:", error)
+						sendResponse({ success: false, error: error.message })
+					})
+				return true 
 			}
 		})
 	}
@@ -402,6 +412,139 @@ class RedditExtractor {
 		if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
 		if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
 		return `${Math.floor(diff / 86400)}d ago`
+	}
+
+	async savePostFromContextMenu() {
+		// Show saving notification first
+		const savingNotification = this.showNotification("💾 Saving Reddit post...", 'saving')
+		
+		try {
+			// Extract post data
+			const postData = await this.extractPostData()
+			if (!postData) {
+				throw new Error("Could not extract post data")
+			}
+
+			// Extract comments data
+			const commentsData = await this.extractCommentsData()
+			const apiPostData = window.redditApiPostData || {}
+
+			// Prepare save data (same structure as popup.js)
+			const saveData = {
+				id: postData.id,
+				title: postData.title,
+				subreddit: postData.subreddit,
+				author: postData.author,
+				score: postData.score,
+				url: postData.url,
+				selftext: apiPostData.selftext || postData.selftext || "",
+				imageUrl: apiPostData.imageUrl || postData.imageUrl || "",
+				savedAt: new Date().toISOString(),
+				commentCount: commentsData.length,
+				comments: commentsData,
+			}
+
+			// Save to storage
+			const result = await chrome.storage.local.get("savedPosts")
+			const savedPosts = result.savedPosts || {}
+			savedPosts[saveData.id] = saveData
+			await chrome.storage.local.set({ savedPosts })
+
+			// Hide saving notification and show success
+			this.hideNotification(savingNotification)
+			this.showNotification("✅ Reddit post saved successfully!", 'success')
+			
+		} catch (error) {
+			console.error("Failed to save post:", error)
+			// Hide saving notification and show error
+			this.hideNotification(savingNotification)
+			this.showNotification("❌ Failed to save Reddit post: " + error.message, 'error')
+			throw error
+		}
+	}
+
+	showNotification(message, type = 'info') {
+		// Create a temporary notification element
+		const notification = document.createElement('div')
+		
+		// Set different colors based on notification type
+		let backgroundColor, borderColor
+		switch(type) {
+			case 'success':
+				backgroundColor = '#0d1117'
+				borderColor = '#28a745'
+				break
+			case 'error':
+				backgroundColor = '#0d1117'
+				borderColor = '#dc3545'
+				break
+			case 'saving':
+				backgroundColor = '#0d1117'
+				borderColor = '#ffc107'
+				break
+			default:
+				backgroundColor = '#0f1419'
+				borderColor = '#30363d'
+		}
+		
+		notification.style.cssText = `
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			background: ${backgroundColor};
+			color: white;
+			padding: 12px 20px;
+			border-radius: 8px;
+			border: 2px solid ${borderColor};
+			box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+			z-index: 10000;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			font-size: 14px;
+			font-weight: 500;
+			transition: all 0.3s ease;
+			animation: slideIn 0.3s ease;
+		`
+		
+		// Add CSS animation
+		if (!document.querySelector('#reddit-save-notification-styles')) {
+			const style = document.createElement('style')
+			style.id = 'reddit-save-notification-styles'
+			style.textContent = `
+				@keyframes slideIn {
+					from { transform: translateX(100%); opacity: 0; }
+					to { transform: translateX(0); opacity: 1; }
+				}
+				@keyframes slideOut {
+					from { transform: translateX(0); opacity: 1; }
+					to { transform: translateX(100%); opacity: 0; }
+				}
+			`
+			document.head.appendChild(style)
+		}
+		
+		notification.textContent = message
+		notification.dataset.notificationType = type
+		document.body.appendChild(notification)
+
+		// Auto-remove success and error notifications after 4 seconds
+		if (type === 'success' || type === 'error') {
+			setTimeout(() => {
+				this.hideNotification(notification)
+			}, 4000)
+		}
+		
+		return notification
+	}
+
+	hideNotification(notification) {
+		if (notification && notification.parentNode) {
+			notification.style.animation = 'slideOut 0.3s ease'
+			setTimeout(() => {
+				if (notification.parentNode) {
+					notification.parentNode.removeChild(notification)
+				}
+			}, 300)
+		}
 	}
 }
 
