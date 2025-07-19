@@ -1,91 +1,63 @@
-# 🎯 Reddit Save & View Chrome Extension
+# Reddit Save & View Chrome Extension
 
-A beautiful Chrome extension to save Reddit posts and comments for offline reading with a clean, dark-themed interface.
+This Chrome extension allows users to save Reddit posts and comments for offline reading with a clean interface. It automatically detects Reddit posts and provides a streamlined way to save and view content later.
 
-## ✨ Features
+## Table of Contents
 
-- **🔍 Auto-detect Reddit posts** - Automatically detects when viewing a Reddit post
-- **💾 Save complete posts** - Saves posts with content, images, and all nested comments
-- **📱 Beautiful dark UI** - Modern interface with GitHub-inspired dark theme
-- **💬 Nested comments** - Preserves reply structure with visual indentation and color coding
-- **🖼️ Image support** - Displays post images inline
-- **📝 Rich text** - Shows original post content with formatting
-- **⚡ Offline storage** - Uses browser's local storage for offline access
-- **🎨 Responsive design** - Works on all screen sizes
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Saving Reddit Posts](#saving-reddit-posts)
+    - [Viewing Saved Posts](#viewing-saved-posts)
+- [Features](#features)
+- [Technical Details](#technical-details)
+- [License](#license)
+- [Contributing](#contributing)
 
-## 🚀 Quick Install
+## Installation
 
-1. **Download** this folder to your computer
-2. **Open Chrome** → `chrome://extensions/`
-3. **Enable Developer Mode** (toggle top right)
-4. **Click "Load unpacked"** → Select this folder
-5. **Pin extension** to toolbar ✅
+1. Download the extension files.
 
-## 📖 How to Use
+2. Open Chrome and go to `chrome://extensions/`.
+3. Enable "Developer mode" in the top right corner.
+4. Click "Load unpacked" and select the folder containing the extension files.
 
-### Save a Reddit Post
+## Usage
+
+1. Click on the extension icon in the Chrome toolbar.
+
+2. Navigate to any Reddit post page.
+3. The extension will automatically detect the post.
+4. Click "Save This Post" to save it for offline reading.
+
+### Saving Reddit Posts
 
 1. Visit any Reddit post (e.g., `reddit.com/r/programming/comments/...`)
-2. Click the 🎯 extension icon
-3. Click "💾 Save This Post"
-4. Wait for "✅ Post saved successfully!"
 
-### View Saved Posts
+2. Click the extension icon in the Chrome toolbar
+3. Click "💾 Save This Post" button
+4. Wait for "✅ Post saved successfully!" confirmation
+
+### Viewing Saved Posts
 
 1. Click the extension icon
-2. Switch to "📚 Saved" tab
-3. Click any saved post to view offline
-4. Delete with 🗑️ button when done
 
-## 🏗️ What Gets Saved
+2. Switch to the "📚 Saved" tab
+3. Click on any saved post to view it offline
+4. Use the 🗑️ delete button to remove posts when no longer needed
 
-### Post Data
+## Features
 
-- Title, author, subreddit, score
-- Post content (selftext) with formatting
-- Post images (if any)
-- External links
-- Save timestamp
+- Automatic Reddit post detection
 
-### Comments Data
+- Complete post saving with content, images, and nested comments
+- Beautiful dark theme interface with GitHub-inspired design
+- Nested comment structure preservation with color-coded indentation
+- Image support with inline display
+- Offline storage using browser's local storage
+- Responsive design for all screen sizes
+- Comment score indicators with emoji visualization
 
-- All comment text and replies
-- Comment scores and authors
-- Nested reply structure (up to 10 levels)
-- Time stamps
-
-### Storage Optimized
-
-- Only essential data saved
-- No media downloads (images linked)
-- Respects Chrome storage limits
-
-## 🎨 Features Showcase
-
-### Dark Theme Design
-
-- GitHub-inspired color scheme
-- Gradient headers and cards
-- Smooth hover effects
-- Beautiful typography
-
-### Nested Comments Display
-
-- Color-coded indentation by depth:
-  - Level 1: Blue border
-  - Level 2: Red border
-  - Level 3: Cyan border
-  - Level 4: Orange border
-  - Level 5: White border
-
-### Post Content
-
-- **Bold** and _italic_ text support
-- Clickable links
-- Line breaks preserved
-- Image display with loading
-
-## 🔧 Technical Details
+## Technical Details
 
 ### File Structure
 
@@ -93,71 +65,32 @@ A beautiful Chrome extension to save Reddit posts and comments for offline readi
 reddit-save/
 ├── manifest.json      # Extension configuration
 ├── popup.html         # Main popup interface
-├── popup.js          # Popup logic
-├── content.js        # Reddit data extraction
+├── popup.js          # Popup logic and functionality
+├── content.js        # Reddit data extraction script
 ├── background.js     # Service worker
-├── viewer.html       # Offline viewer
-├── viewer.js         # Viewer logic
-├── icons/            # Extension icons
-└── README.md         # This file
+├── viewer.html       # Offline post viewer
+├── viewer.js         # Viewer logic and rendering
+├── icons/            # Extension icons (16x16, 32x32, 48x48, 128x128)
+└── README.md         # Documentation
 ```
-
-### Permissions
-
-- `activeTab` - Read current Reddit page
-- `storage` - Save posts locally
-- `*://*.reddit.com/*` - Access Reddit pages
 
 ### Browser Support
 
 - ✅ Chrome (Manifest V3)
-- ✅ Edge (Chromium-based)
-- ❌ Firefox (different manifest format)
 
-## 🐛 Troubleshooting
+- ✅ Chromium-based browsers
 
-### Extension Not Working?
+### Permissions
 
-- Make sure you're on a Reddit post page
-- Check URL format: `reddit.com/r/SUBREDDIT/comments/ID/`
-- Try refreshing the page
+- `activeTab` - Read current Reddit page content
 
-### No Comments Saved?
+- `storage` - Save posts to local browser storage
+- `*://*.reddit.com/*` - Access Reddit pages for data extraction
 
-- Some posts may have comments disabled
-- Try a post with visible comments
-- Check browser console for errors
+## License
 
-### Clear Storage (if needed)
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
-```javascript
-// Open browser console (F12) and run:
-chrome.storage.local.clear()
-```
+## Contributing
 
-## 🔮 Future Ideas
-
-- [ ] Export saved posts to files
-- [ ] Search within saved posts
-- [ ] Categories and tagging
-- [ ] Bulk operations
-- [ ] Sync across devices
-
-## 📝 License
-
-MIT License - Free to use and modify!
-
-## 🤝 Contributing
-
-Found a bug or want to add features? Feel free to:
-
-1. Fork the project
-2. Make improvements
-3. Test thoroughly
-4. Submit changes
-
----
-
-**Made with ❤️ for Reddit users who love to save great content!**
-
-Save your favorite discussions, tutorials, and stories for offline reading with beautiful formatting that preserves the original Reddit experience.
+Contributions are welcome! Please feel free to submit a Pull Request.
