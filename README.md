@@ -5,6 +5,7 @@ This Chrome extension allows users to save Reddit posts and comments for offline
 ## Table of Contents
 
 - [Installation](#installation)
+  
 - [Usage](#usage)
     - [Saving Reddit Posts](#saving-reddit-posts)
     - [Viewing Saved Posts](#viewing-saved-posts)
