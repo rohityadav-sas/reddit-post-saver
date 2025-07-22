@@ -65,7 +65,7 @@ This Chrome extension allows users to save Reddit posts and comments for offline
 ### File Structure
 
 ```
-reddit-save/
+reddit-post-saver/
 ├── manifest.json      # Extension configuration
 ├── popup.html         # Main popup interface
 ├── popup.js          # Popup logic and functionality
