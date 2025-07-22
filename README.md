@@ -1,4 +1,4 @@
-# Reddit Save & View Chrome Extension
+# Reddit Save & View - Chrome Extension
 
 This Chrome extension allows users to save Reddit posts and comments for offline reading with a clean interface. It automatically detects Reddit posts and provides a streamlined way to save and view content later.
 
